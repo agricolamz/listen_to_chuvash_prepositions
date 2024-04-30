@@ -10,8 +10,8 @@ editor_options:
 library(tidyverse)
 read_csv("chuvash_listen_drop.csv") |> 
   mutate(audio = str_remove(File, ".eaf"),
-         audio = str_c(audio, "-", round(as.double(From)*1000)),
-         audio = str_c(audio, "-", round(as.double(To)*1000)),
+         audio = str_c(audio, "-", round(as.double(From))),
+         audio = str_c(audio, "-", round(as.double(To))),
          audio = str_c("http://lingconlab.ru/ChuvashRus/OUT/", audio, ".wav")) |> 
   mutate(id = sample(1:n()),
          drop = "") |>
