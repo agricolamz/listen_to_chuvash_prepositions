@@ -1,0 +1,32 @@
+---
+title: "Listen to Chuvash preposition"
+format: html
+editor: source
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, message=FALSE}
+library(tidyverse)
+read_csv("chuvash_listen_drop.csv") |> 
+  mutate(audio = str_remove(File, ".eaf"),
+         audio = str_c(audio, "-", round(as.double(From)*1000)),
+         audio = str_c(audio, "-", round(as.double(To)*1000)),
+         audio = str_c("http://lingconlab.ru/ChuvashRus/OUT/", audio, ".wav")) |> 
+  mutate(id = sample(1:n()),
+         drop = "") |>
+  rename(preposition = DMatch) |> 
+  arrange(id) |> 
+  select(id, sentence, audio, preposition, drop) ->
+df
+
+df |> 
+  select(-audio) |> 
+  writexl::write_xlsx("fill_me.xlsx")
+
+df |>   
+  select(-preposition, -drop) |> 
+  mutate(audio = str_glue('<audio controls="" preload="none"><source src="{audio}" type="audio/ogg"></audio> ')) |> 
+  arrange(id) |> 
+  DT::datatable(escape = FALSE, rownames = FALSE)
+```
