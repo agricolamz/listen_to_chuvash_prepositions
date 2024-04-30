@@ -14,10 +14,11 @@ read_csv("chuvash_listen_drop.csv") |>
          audio = str_c(audio, "-", round(as.double(To))),
          audio = str_c("http://lingconlab.ru/ChuvashRus/OUT/", audio, ".wav")) |> 
   mutate(id = sample(1:n()),
-         drop = "") |>
+         drop = "",
+         comment = "") |>
   rename(preposition = DMatch) |> 
   arrange(id) |> 
-  select(id, sentence, audio, preposition, drop) ->
+  select(id, sentence, audio, preposition, drop, comment) ->
 df
 
 df |> 
@@ -25,7 +26,7 @@ df |>
   writexl::write_xlsx("fill_me.xlsx")
 
 df |>   
-  select(-preposition, -drop) |> 
+  select(-preposition, -drop, -comment) |> 
   mutate(audio = str_glue('<audio controls="" preload="none"><source src="{audio}" type="audio/ogg"></audio> ')) |> 
   arrange(id) |> 
   DT::datatable(escape = FALSE, rownames = FALSE)
